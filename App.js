@@ -1,20 +1,76 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { firebase } from './config';
 
-export default function App() {
+import Login from "./src/Login";
+import Registration from "./src/Registration";
+import Dashboard from "./src/Dashboard";
+import Header from "./components/Header";
+
+const Stack = createStackNavigator();
+
+function App() {
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
+
+  // Handle user state changes
+  function onAuthStateChanged(user) {
+    setUser(user);
+    if (initializing) setInitializing(false);
+  }
+
+  useEffect(() => {
+    const subscriber = firebase.auth().onAuthStateChanged(onAuthStateChanged);
+    return () => subscriber(); // Unsubscribe on unmount
+  }, []);
+
+  if (initializing) return null;
+
+  // Render the navigation container and screens
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Stack.Navigator>
+      {user ? (
+        <>
+          <Stack.Screen 
+            name="Dashboard" 
+            component={Dashboard}
+            options={{
+              headerTitle: () => <Header name="Abdullah"/>,
+              headerStyle: {
+                height: 150,
+                borderBottomLeftRadius: 25,
+                borderBottomRightRadius: 25,
+                backgroundColor: '#00e4d0',
+                shadowColor: '#000',
+                elevation: 25
+              }
+            }} 
+          />
+          {/* Add other screens for logged-in users here */}
+        </>
+      ) : (
+        <>
+          <Stack.Screen 
+            name="Login" 
+            component={Login}
+            // options
+          />
+          <Stack.Screen 
+            name="Registration" 
+            component={Registration}
+            // options
+          />
+        </>
+      )}
+    </Stack.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default function NavigationWrapper() {
+  return (
+    <NavigationContainer>
+      <App />
+    </NavigationContainer>
+  );
+}
