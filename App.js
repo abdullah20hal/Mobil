@@ -54,12 +54,32 @@ function App() {
           <Stack.Screen 
             name="Login" 
             component={Login}
-            // options
+            options={{
+              headerTitle: () => <Header name="Abdullah"/>,
+              headerStyle: {
+                height: 150,
+                borderBottomLeftRadius: 25,
+                borderBottomRightRadius: 25,
+                backgroundColor: '#00e4d0',
+                shadowColor: '#000',
+                elevation: 25
+              }
+            }} 
           />
           <Stack.Screen 
             name="Registration" 
             component={Registration}
-            // options
+            options={{
+              headerTitle: () => <Header name="Abdullah"/>,
+              headerStyle: {
+                height: 150,
+                borderBottomLeftRadius: 25,
+                borderBottomRightRadius: 25,
+                backgroundColor: '#00e4d0',
+                shadowColor: '#000',
+                elevation: 25
+              }
+            }} 
           />
         </>
       )}
