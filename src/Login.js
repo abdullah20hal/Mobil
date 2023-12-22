@@ -10,8 +10,18 @@ const Login = () => {
 
   const loginUser = async () => {
     try {
-      await firebase.auth().signInWithEmailAndPassword(email, password);
-      // Optionally navigate to another screen upon successful login
+      const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+
+      if (userCredential.user.uid==="cUrEPMFhKkhXY8v3JjkPC0iv4Ws2") {
+        const userEmail = userCredential.user.email;
+        navigation.navigate('Admin', { email: userEmail });
+      }
+      else {
+        const userEmail = userCredential.user.email;
+        navigation.navigate('Home', { email: userEmail });
+
+       
+      }
     } catch (error) {
       alert(error.message);
     }
@@ -57,10 +67,10 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontWeight: 'bold',
-    fontSize: 26
+    fontSize: 26,
   },
   inputContainer: {
-    marginTop: 40
+    marginTop: 40,
   },
   textInput: {
     paddingTop: 20,
@@ -84,13 +94,13 @@ const styles = StyleSheet.create({
   buttonText: {
     fontWeight: 'bold',
     fontSize: 22,
-    color: '#fff'
+    color: '#fff',
   },
   registerLink: {
-    marginTop: 20
+    marginTop: 20,
   },
   registerText: {
     fontWeight: 'bold',
-    fontSize: 16
-  }
+    fontSize: 16,
+  },
 });

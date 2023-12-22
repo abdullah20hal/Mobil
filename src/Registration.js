@@ -2,33 +2,43 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { firebase } from '../config';
 
-const Registration = () => {
+const Registration = ({navigation}) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
 
     const registerUser = async () => {
+        if (email === '' || password === '') {
+            alert('Email and password are required');
+            return;
+        }
+    
+        if (password.length < 8) {
+            alert('Password should be at least 8 characters');
+            return;
+        }
+    
         try {
-            await firebase.auth().createUserWithEmailAndPassword(email, password);
-            await firebase.auth().currentUser.sendEmailVerification({
-                handleCodeInApp: true,
-                url: 'https://alisveris-uygulama-e6ba5.firebaseapp.com',
-            });
-            alert('Verification email sent');
+            // ... Kullanıcı kaydı işlemleri ...
+            const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+            console.log('User registered: ', userCredential.user);
+            console.log("Navigating to Login");
+            firebase.firestore().collection('users')
+            .doc(firebase.auth().currentUser.uid)
+            .set({
+                firstName,
+                lastName,
+                email,
+            })
 
-            await firebase.firestore().collection('users')
-                .doc(firebase.auth().currentUser.uid)
-                .set({
-                    firstName,
-                    lastName,
-                    email,
-                    // ... possibly more fields ...
-                });
+            navigation.navigate('Login');
         } catch (error) {
             alert(error.message);
         }
+        
     };
+    
 
     return (
         <View style={styles.container}>
@@ -99,7 +109,7 @@ const styles = StyleSheet.create({
     button: {
         marginTop: 50,
         height: 70,
-        width: 250,
+      
         backgroundColor: '#026efd',
         alignItems: 'center',
         justifyContent: 'center',
@@ -107,6 +117,7 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         fontWeight: 'bold',
+        color:'white',
         fontSize: 22,
     },
 });

@@ -1,76 +1,90 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, SafeAreaView, Text, TouchableOpacity } from 'react-native';
-import { firebase } from '../config';
+import React from 'react';
+import { View, Text, StyleSheet,FlatList, TouchableOpacity } from 'react-native';
+import { getAuth, signOut } from 'firebase/auth';
+const products = [
+    { id: '1', name: 'Ürün 1', description: 'Açıklama 1' },
+    { id: '2', name: 'Ürün 2', description: 'Açıklama 2' },
 
-const Dashboard = () => {
-  const [name, setName] = useState('');
+    { id: '3', name: 'Ürün 1', description: 'Açıklama 1' },
+    { id: '4', name: 'Ürün 2', description: 'Açıklama 2' },
+    { id: '5', name: 'Ürün 2', description: 'Açıklama 2' },
+    { id: '6', name: 'Ürün 2', description: 'Açıklama 2' },
+    { id: '7', name: 'Ürün 2', description: 'Açıklama 2' },
+    { id: '8', name: 'Ürün 2', description: 'Açıklama 2' },
 
-  useEffect(() => {
-    firebase.firestore().collection('users')
-      .doc(firebase.auth().currentUser.uid).get()
-      .then((snapshot) => {
-        if (snapshot.exists) {
-          setName(snapshot.data())
-        } else {
-          console.log('User does not exist');
-        }
-      });
-  }, []);
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.headerText}>
-        Hello, {name.firstName}
-      </Text>
-      <TouchableOpacity
-        onPress={() => firebase.auth().signOut()}
-        style={styles.button}
-      >
-        <Text style={styles.buttonText}>
-          Sign out
-        </Text>
-      </TouchableOpacity>
-    </SafeAreaView>
-  );
-}
+    // daha fazla ürün...
+];
+const Dashboard = ({ navigation, route }) => {
+    const email = route.params?.email; // 'email' değerinin varlığını güvenli bir şekilde kontrol et
+    const renderProduct = ({ item }) => (
+        <View style={styles.productContainer}>
+            <Text style={styles.productName}>{item.name}</Text>
+            <Text>{item.description}</Text>
+        </View>
+    );
+    const logoutUser = () => {
+        const auth = getAuth();
+        signOut(auth).then(() => {
+            console.log('çıkış');
+            navigation.navigate('Login'); 
+        }).catch((error) => {
+            console.error('hata:', error);
+        });
+    };
 
-export default Dashboard;
+    React.useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <TouchableOpacity onPress={logoutUser}>
+                    <Text style={styles.buttonText}>çıkış</Text>
+                </TouchableOpacity>
+            ),
+        });
+    }, [navigation]);
+
+    return (
+        <View style={styles.container}>
+
+            <FlatList
+                data={products}
+                renderItem={renderProduct}
+                keyExtractor={item => item.id}
+                numColumns={2} // İki sütunlu görünüm
+            />
+        </View>
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        marginTop: 100,
+        padding: 10,
+        backgroundColor: '#f5f5f5',
     },
-    headerText: {
+    text: {
+        fontSize: 24,
         fontWeight: 'bold',
-        fontSize: 23,
-    },
-    inputContainer: {
-        marginTop: 40,
-    },
-    textInput: {
-        paddingTop: 20,
-        paddingBottom: 10,
-        width: 400,
-        fontSize: 20,
-        borderBottomWidth: 1,
-        borderBottomColor: '#000',
-        marginBottom: 10,
-        textAlign: 'center',
-    },
-    button: {
-        marginTop: 50,
-        height: 70,
-        width: 250,
-        backgroundColor: '#026efd',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 50,
     },
     buttonText: {
+        // Buton metni için stil tanımlamaları
+        color: 'black', // Örnek renk
+        marginRight: 20, // Sağ kenar boşluğu
+        fontSize: 18, // Font büyüklüğü
+    },
+    productContainer: {
+        height:200,
+        flex: 1,
+        margin: 5,
+        padding: 10,
+        backgroundColor: '#ADD8E6',
+        alignItems: 'center',
+    },
+    productName: {
         fontWeight: 'bold',
-        fontSize: 22,
-        color: '#fff', // assuming you might want the text color to be white for better visibility on the blue button
     },
 });
+
+export default Dashboard;
+
+
