@@ -1,5 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet,FlatList, TouchableOpacity } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+
 import { getAuth, signOut } from 'firebase/auth';
 const products = [
     { id: '1', name: 'Ürün 1', description: 'Açıklama 1' },
@@ -16,6 +18,9 @@ const products = [
     // daha fazla ürün...
 ];
 const Dashboard = ({ navigation, route }) => {
+
+
+    
     const email = route.params?.email; // 'email' değerinin varlığını güvenli bir şekilde kontrol et
     const renderProduct = ({ item }) => (
         <View style={styles.productContainer}>
@@ -26,7 +31,7 @@ const Dashboard = ({ navigation, route }) => {
     const logoutUser = () => {
         const auth = getAuth();
         signOut(auth).then(() => {
-            console.log('çıkış');
+            console.log('çdıkış');
             navigation.navigate('Login'); 
         }).catch((error) => {
             console.error('hata:', error);
@@ -36,8 +41,8 @@ const Dashboard = ({ navigation, route }) => {
     React.useLayoutEffect(() => {
         navigation.setOptions({
             headerRight: () => (
-                <TouchableOpacity onPress={logoutUser}>
-                    <Text style={styles.buttonText}>çıkış</Text>
+                <TouchableOpacity onPress={logoutUser}  style={styles.logoutButton}>
+            <FontAwesome name="sign-out" size={24} color="black" />
                 </TouchableOpacity>
             ),
         });
@@ -57,6 +62,7 @@ const Dashboard = ({ navigation, route }) => {
 };
 
 const styles = StyleSheet.create({
+
     container: {
         flex: 1,
         padding: 10,
@@ -65,6 +71,9 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 24,
         fontWeight: 'bold',
+    },
+    logoutButton: {
+        marginRight: 10,
     },
     buttonText: {
         // Buton metni için stil tanımlamaları

@@ -14,7 +14,9 @@ const Admin = ({ route }) => {
     const todoRef = firebase.firestore().collection('todos');
     const [addData, setAddData] = useState('');
     const navigation = useNavigation();
-
+    const handlePress = () => {
+        navigation.navigate('UrunlerIstekListele');
+    };
     useEffect(() => {
         todoRef
             .orderBy('createdAt', 'desc')
@@ -85,10 +87,19 @@ const Admin = ({ route }) => {
     React.useLayoutEffect(() => {
         navigation.setOptions({
             headerRight: () => (
-                <TouchableOpacity onPress={logoutUser}>
-                    <Text style={styles.buttonText}>Logout</Text>
-                </TouchableOpacity>
+                <View style={styles.iconContainer}>
+                       <TouchableOpacity onPress={handlePress} style={styles.iconButton2}>
+                <FontAwesome name="list-ul" size={24} color="black" />
+                <Text style={styles.iconText}>Ürünler</Text>
+            </TouchableOpacity>
+                    <TouchableOpacity onPress={logoutUser} style={styles.iconButton}>
+                        <FontAwesome name="sign-out" size={24} color="black" />
+                    </TouchableOpacity>
+                </View>
             ),
+
+
+           
         });
     }, [navigation]);
 
@@ -109,23 +120,8 @@ const Admin = ({ route }) => {
                 </TouchableOpacity>
             </View>
 
-            <FlatList
-                data={todos}
-                numColumns={1}
-                renderItem={({ item }) => (
-                    <View style={styles.container}>
-                        <Pressable onPress={() => navigation.navigate('AdminDetails', { item })}>
-                            <Text style={styles.itemHeading}>
-                                {item.heading[0].toUpperCase() + item.heading.slice(1)}
-                            </Text>
-                        </Pressable>
-                        <FontAwesome name='edit' size={24} color='blue' onPress={() => navigation.navigate('EditTodoScreen', { item })} />
-                        <FontAwesome name='trash-o' size={24} color='red' onPress={() => deleteTodo(item)} />
-                    </View>
-                )}
-                keyExtractor={item => item.id}
-            />
-            <StatusBar style='auto' />
+            
+       
         </View>
     );
 };
@@ -145,6 +141,23 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 18,
     },
+    iconContainer: {
+        
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: '100%', // Tüm genişliği kaplaması için
+    },
+    iconButton: {
+        padding: 10,
+        // Sağ tarafta boşluk bırakmak için
+    },
+    iconButton2: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 10,
+    },
+    
     formContainer: {
         flexDirection: 'row',
         height: 80,
@@ -152,6 +165,8 @@ const styles = StyleSheet.create({
         marginRight: 10,
         marginTop: 100,
     },
+  
+    
     input: {
         height: 48,
         borderRadius: 5,
@@ -160,6 +175,12 @@ const styles = StyleSheet.create({
         paddingLeft: 16,
         flex: 1,
         marginRight: 5,
+    },
+ 
+    iconText: {
+        marginLeft: 5,
+        fontSize: 16,
+        color: 'black',
     },
     button: {
         height: 47,

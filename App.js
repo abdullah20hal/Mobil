@@ -15,7 +15,7 @@ import UserScreen from './src/UserScreen';
 import FavoritesScreen from './src/FavoritesScreen';
 import CartScreen from './src/CartScreen';
 
-
+import UrunlerIstekListele from './src/UrunlerIstekListele';
 
 const Tab = createBottomTabNavigator();
 
@@ -85,7 +85,7 @@ function App() {
         options={{
           headerTitle: () => <Header name="Dashboard"/>,
           headerStyle: {
-            height: 150,
+            height: 100,
             borderBottomLeftRadius: 25,
             borderBottomRightRadius: 25,
             backgroundColor: '#00e4d0',
@@ -100,7 +100,7 @@ function App() {
        options={{
         headerTitle: () => <Header name="Admin"/>,
         headerStyle: {
-          height: 150,
+          height: 100,
           borderBottomLeftRadius: 25,
           borderBottomRightRadius: 25,
           backgroundColor: '#00e4d0',
@@ -110,8 +110,29 @@ function App() {
       }} 
       
       />
-        <Stack.Screen name="EditTodoScreen" component={EditTodoScreen}       />
+        <Stack.Screen name="EditTodoScreen" component={EditTodoScreen}    options={{
+        headerTitle: () => <Header name="EditTodoScreen"/>,
+        headerStyle: {
+          height: 100,
+          borderBottomLeftRadius: 25,
+          borderBottomRightRadius: 25,
+          backgroundColor: '#00e4d0',
+          shadowColor: '#000',
+          elevation: 25
+        }
+      }}     />
 
+        <Stack.Screen name="UrunlerIstekListele" component={UrunlerIstekListele}    options={{
+        headerTitle: () => <Header name="UrunlerIstekListele"/>,
+        headerStyle: {
+          height: 100,
+          borderBottomLeftRadius: 25,
+          borderBottomRightRadius: 25,
+          backgroundColor: '#00e4d0',
+          shadowColor: '#000',
+          elevation: 25
+        }
+      }}     />
 
       {/* Giriş yapmamış kullanıcılar için Login ve Registration ekranları */}
       <Stack.Screen 
@@ -120,7 +141,7 @@ function App() {
         options={{
           headerTitle: () => <Header name="Login"/>,
           headerStyle: {
-            height: 150,
+            height: 100,
             borderBottomLeftRadius: 25,
             borderBottomRightRadius: 25,
             backgroundColor: '#00e4d0',
@@ -135,7 +156,7 @@ function App() {
         options={{
           headerTitle: () => <Header name="Registration"/>,
           headerStyle: {
-            height: 150,
+            height: 100,
             borderBottomLeftRadius: 25,
             borderBottomRightRadius: 25,
             backgroundColor: '#00e4d0',
