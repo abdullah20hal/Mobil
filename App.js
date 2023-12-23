@@ -14,7 +14,7 @@ import EditTodoScreen from './src/EditTodoScreen';
 import UserScreen from './src/UserScreen';
 import FavoritesScreen from './src/FavoritesScreen';
 import CartScreen from './src/CartScreen';
-
+import UploadImageScreen from './src/UploadImageScreenv';
 import UrunlerIstekListele from './src/UrunlerIstekListele';
 
 const Tab = createBottomTabNavigator();
@@ -38,10 +38,46 @@ const MyTabs = () => {
         },
       })}
     >
-      <Tab.Screen name="Home" component={Dashboard} />
-      <Tab.Screen name="Favorites" component={FavoritesScreen} />
-      <Tab.Screen name="Cart" component={CartScreen} />
-      <Tab.Screen name="User" component={UserScreen} />
+      <Tab.Screen name="Home" component={Dashboard} options={{
+          headerTitle: () => <Header name="Home"/>,
+          headerStyle: {
+            height: 100,
+            borderBottomLeftRadius: 25,
+            borderBottomRightRadius: 25,
+            shadowColor: '#000',
+            elevation: 25
+          }
+        }} />
+      <Tab.Screen name="Favorites" component={FavoritesScreen} options={{
+          headerTitle: () => <Header name="Favorites"/>,
+          headerStyle: {
+            height: 100,
+            borderBottomLeftRadius: 25,
+            borderBottomRightRadius: 25,
+            shadowColor: '#000',
+            elevation: 25
+          }
+        }}/>
+      <Tab.Screen name="Cart" component={CartScreen}options={{
+          headerTitle: () => <Header name="Cart"/>,
+          headerStyle: {
+            height: 100,
+            borderBottomLeftRadius: 25,
+            borderBottomRightRadius: 25,
+            shadowColor: '#000',
+            elevation: 25
+          }
+        }} />
+      <Tab.Screen name="User" component={UserScreen} options={{
+          headerTitle: () => <Header name="User"/>,
+          headerStyle: {
+            height: 100,
+            borderBottomLeftRadius: 25,
+            borderBottomRightRadius: 25,
+            shadowColor: '#000',
+            elevation: 25
+          }
+        }}/>
     </Tab.Navigator>
   );
 };
@@ -103,7 +139,6 @@ function App() {
           height: 100,
           borderBottomLeftRadius: 25,
           borderBottomRightRadius: 25,
-          backgroundColor: '#00e4d0',
           shadowColor: '#000',
           elevation: 25
         }
@@ -116,19 +151,17 @@ function App() {
           height: 100,
           borderBottomLeftRadius: 25,
           borderBottomRightRadius: 25,
-          backgroundColor: '#00e4d0',
           shadowColor: '#000',
           elevation: 25
         }
       }}     />
-
+ <Stack.Screen name="UploadImageScreen" component={UploadImageScreen}  />
         <Stack.Screen name="UrunlerIstekListele" component={UrunlerIstekListele}    options={{
         headerTitle: () => <Header name="UrunlerIstekListele"/>,
         headerStyle: {
           height: 100,
           borderBottomLeftRadius: 25,
           borderBottomRightRadius: 25,
-          backgroundColor: '#00e4d0',
           shadowColor: '#000',
           elevation: 25
         }
@@ -144,7 +177,6 @@ function App() {
             height: 100,
             borderBottomLeftRadius: 25,
             borderBottomRightRadius: 25,
-            backgroundColor: '#00e4d0',
             shadowColor: '#000',
             elevation: 25
           }
@@ -159,13 +191,12 @@ function App() {
             height: 100,
             borderBottomLeftRadius: 25,
             borderBottomRightRadius: 25,
-            backgroundColor: '#00e4d0',
             shadowColor: '#000',
             elevation: 25
           }
         }} 
       />
-                    <Stack.Screen name="Home" component={MyTabs} options={{ headerShown: false }} />
+                    <Stack.Screen name="Home" component={MyTabs} options={{ headerShown: false }}  />
 
     </Stack.Navigator>
 

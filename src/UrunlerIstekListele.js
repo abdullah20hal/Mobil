@@ -3,7 +3,6 @@ import { StyleSheet, View, Text, Pressable, FlatList } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { firebase } from '../config';
-
 const UrunlerIstekListele = () => {
     const [todos, setTodos] = useState([]);
     const todoRef = firebase.firestore().collection('todos');
@@ -16,10 +15,13 @@ const UrunlerIstekListele = () => {
                 querySnapshot => {
                     const todos = [];
                     querySnapshot.forEach(doc => {
-                        const { heading } = doc.data();
+                        const { heading, imageUrl, price, description } = doc.data();
                         todos.push({
                             id: doc.id,
                             heading,
+                            imageUrl, // Yeni eklenen özellikler
+                            price,
+                            description,
                         });
                     });
                     setTodos(todos);
@@ -49,6 +51,15 @@ const UrunlerIstekListele = () => {
                         <Text style={styles.itemHeading}>
                             {item.heading[0].toUpperCase() + item.heading.slice(1)}
                         </Text>
+                        <Text style={styles.itemDescription}>
+                            Image URL: {item.imageUrl}
+                        </Text>
+                        <Text style={styles.itemDescription}>
+                            Price: {item.price}
+                        </Text>
+                        <Text style={styles.itemDescription}>
+                            Description: {item.description}
+                        </Text>
                     </Pressable>
                     <FontAwesome name='edit' size={24} color='blue' onPress={() => navigation.navigate('EditTodoScreen', { item })} />
                     <FontAwesome name='trash-o' size={24} color='red' onPress={() => deleteTodo(item)} />
@@ -64,17 +75,50 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: '#e5e5e5',
+        backgroundColor: 'white',
         padding: 15,
         borderRadius: 15,
-        margin: 5,
+        margin: 10,
         marginHorizontal: 10,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     },
     itemHeading: {
         fontWeight: 'bold',
         fontSize: 18,
+        marginBottom: 5, // Başlık ile diğer metinler arasında boşluk bırakır
     },
-    // Diğer stil tanımlamaları
+    itemDescription: {
+        fontSize: 14,
+        color: 'gray', // Metinleri gri renkte yapar
+    },
+    editButton: {
+        backgroundColor: 'blue',
+        padding: 10,
+        borderRadius: 5,
+        marginRight: 10, // Düzenle düğmesi ile sil düğmesi arasında boşluk bırakır
+    },
+    editButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
+    },
+    deleteButton: {
+        backgroundColor: 'red',
+        padding: 10,
+        borderRadius: 5,
+    },
+    deleteButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
+    },
 });
 
+
 export default UrunlerIstekListele;
+
