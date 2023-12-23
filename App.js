@@ -10,7 +10,7 @@ import Registration from "./src/Registration";
 import Dashboard from "./src/Dashboard";
 import Header from "./components/Header";
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import EditTodoScreen from './src/EditTodoScreen';
 import UserScreen from './src/UserScreen';
 import FavoritesScreen from './src/FavoritesScreen';
 import CartScreen from './src/CartScreen';
@@ -110,7 +110,9 @@ function App() {
       }} 
       
       />
-  
+        <Stack.Screen name="EditTodoScreen" component={EditTodoScreen}       />
+
+
       {/* Giriş yapmamış kullanıcılar için Login ve Registration ekranları */}
       <Stack.Screen 
         name="Login" 
