@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, FlatList, TouchableOpacity, Alert } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { getAuth, signOut } from 'firebase/auth';
 
 import { firebase } from '../config';
-import UrunlerIstekListele from './UrunlerIstekListele'; // UrunlerIstekListele bileşenini içe aktar
 
 const Dashboard = ({ navigation, route }) => {
     const [products, setProducts] = useState([]); // Ürünleri saklamak için bir dizi tanımla
@@ -46,6 +45,35 @@ const Dashboard = ({ navigation, route }) => {
             });
     };
 
+    // Bildirimi kontrol etmek için bir fonksiyon
+    const checkForNotification = () => {
+        // Firebase'den en son bildirimi çek
+        firebase.firestore().collection('todos').get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    doc.ref.collection('notifications').orderBy('timestamp', 'desc').limit(1)
+                        .get().then((notificationSnapshot) => {
+                            notificationSnapshot.forEach((notificationDoc) => {
+                                const notification = notificationDoc.data();
+                                // Bildirimi göster (Expo Notifications kullanılabilir)
+                                Alert.alert(
+                                    'Yeni Bildirim',
+                                    notification.message,
+                                    [
+                                        {
+                                            text: 'Tamam',
+                                            onPress: () => {
+                                                // Bildirimi aldığınızı işaretleme veya başka bir işlem yapma seçeneği
+                                            },
+                                        },
+                                    ],
+                                    { cancelable: false }
+                                );
+                            });
+                        });
+                });
+            });
+    };
 
     React.useLayoutEffect(() => {
         navigation.setOptions({
@@ -79,25 +107,33 @@ const Dashboard = ({ navigation, route }) => {
     );
 
     const addToCart = (item) => {
-        // Sepete ekleme işlemini burada gerçekleştir
-    };
+        console.log("urununuz septeye eklendi")  
+        alert("urununuz septeye eklendi");    };
 
     const addToFavorites = (item) => {
-        // Favorilere ekleme işlemini burada gerçekleştir
-    };
+console.log("favoru urun olarak kayid")  
+alert("favoru urun olarak kayit edildi");
+
+};
+
+    // Kullanıcı giriş yaptıktan 5 saniye sonra bildirimi kontrol et
+    useEffect(() => {
+        const notificationTimer = setTimeout(() => {
+            checkForNotification();
+        }, 5000);
+
+        return () => clearTimeout(notificationTimer);
+    }, []);
 
     return (
         <View style={styles.container}>
-            {/* Çıkış yapma düğmesi */}
-          
             {/* Firestore'dan gelen ürünleri listeleyen bileşen */}
             <FlatList
-    data={products}
-    renderItem={renderProduct}
-    keyExtractor={(item) => item.id}
-    numColumns={2} // Tek sütunlu görünüm
-/>
-
+                data={products}
+                renderItem={renderProduct}
+                keyExtractor={(item) => item.id}
+                numColumns={2} // Tek sütunlu görünüm
+            />
         </View>
     );
 };

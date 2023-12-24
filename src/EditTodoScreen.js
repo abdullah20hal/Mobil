@@ -30,6 +30,19 @@ const EditTodoScreen = ({ route, navigation }) => {
             .catch((error) => {
                 alert(error);
             });
+            todoRef
+            .doc(item.id)
+            .collection('notifications')
+            .add({
+                message: `${item.heading} ürününün fiyatı düşürüldü!`,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            })
+            .then(() => {
+                console.log('Bildirim kaydedildi');
+            })
+            .catch((error) => {
+                console.error('Bildirim kaydedilemedi:', error);
+            });
     };
 
     return (
@@ -73,7 +86,7 @@ const EditTodoScreen = ({ route, navigation }) => {
                 />
             </View>
             <TouchableOpacity style={styles.button} onPress={updateTodo}>
-                <Text style={styles.buttonText}>Update Todo</Text>
+                <Text style={styles.buttonText}>Urun Guncelle</Text>
             </TouchableOpacity>
         </ScrollView>
     );

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import * as Notifications from 'expo-notifications';
 
 import { createStackNavigator } from "@react-navigation/stack";
 import { firebase } from './config';
@@ -16,7 +17,15 @@ import FavoritesScreen from './src/FavoritesScreen';
 import CartScreen from './src/CartScreen';
 import UploadImageScreen from './src/UploadImageScreenv';
 import UrunlerIstekListele from './src/UrunlerIstekListele';
+import UserUpdateScreen from './src/UserUpdateScreen ';
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
 const Tab = createBottomTabNavigator();
 
 const MyTabs = () => {
@@ -68,6 +77,10 @@ const MyTabs = () => {
             elevation: 25
           }
         }} />
+
+
+
+        
       <Tab.Screen name="User" component={UserScreen} options={{
           headerTitle: () => <Header name="User"/>,
           headerStyle: {
@@ -146,7 +159,7 @@ function App() {
       
       />
         <Stack.Screen name="EditTodoScreen" component={EditTodoScreen}    options={{
-        headerTitle: () => <Header name="EditTodoScreen"/>,
+        headerTitle: () => <Header name="EditUrunScreen"/>,
         headerStyle: {
           height: 100,
           borderBottomLeftRadius: 25,
@@ -182,6 +195,21 @@ function App() {
           }
         }} 
       />
+  <Stack.Screen 
+        name="UserUpdateScreen" 
+        component={UserUpdateScreen}
+        options={{
+          headerTitle: () => <Header name="UserUpdateScreen"/>,
+          headerStyle: {
+            height: 100,
+            borderBottomLeftRadius: 25,
+            borderBottomRightRadius: 25,
+            shadowColor: '#000',
+            elevation: 25
+          }
+        }} 
+      />
+
       <Stack.Screen 
         name="Registration" 
         component={Registration}

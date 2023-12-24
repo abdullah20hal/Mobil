@@ -12,7 +12,7 @@ const Login = () => {
     try {
       const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
 
-      if (userCredential.user.uid==="cUrEPMFhKkhXY8v3JjkPC0iv4Ws2") {
+      if (userCredential.user.uid==="d50qfAZbqVajtAL15TLgKdg3IAz2") {
         const userEmail = userCredential.user.email;
         navigation.navigate('Admin', { email: userEmail });
       }
