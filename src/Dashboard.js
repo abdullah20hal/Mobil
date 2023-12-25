@@ -110,11 +110,34 @@ const Dashboard = ({ navigation, route }) => {
         console.log("urununuz septeye eklendi")  
         alert("urununuz septeye eklendi");    };
 
-    const addToFavorites = (item) => {
-console.log("favoru urun olarak kayid")  
-alert("favoru urun olarak kayit edildi");
-
-};
+        const addToFavorites = (item) => {
+            const user = firebase.auth().currentUser; // Aktif kullanıcıyı al
+            if (!user) {
+                console.log("Kullanıcı girişi gerekli!");
+                return;
+            }
+            
+            const favoritesRef = firebase.firestore().collection('favorites');
+            const favoriteItem = {
+                userId: user.uid, // Kullanıcının ID'sini sakla
+                productId: item.id, // Ürün ID'si
+                heading: item.heading, // Ürün başlığı
+                price: item.price, // Ürün fiyatı
+                imageUrl: item.imageUrl, // Ürün resmi URL'si
+                description: item.description, // Ürün açıklaması
+                createdAt: firebase.firestore.FieldValue.serverTimestamp() // Oluşturulma zamanı
+            };
+        
+            favoritesRef.add(favoriteItem)
+                .then(() => {
+                    console.log("Ürün favorilere eklendi");
+                    alert("Ürün favorilere eklendi");
+                })
+                .catch((error) => {
+                    console.error("Favorilere ekleme hatası:", error);
+                });
+        };
+        
 
     // Kullanıcı giriş yaptıktan 5 saniye sonra bildirimi kontrol et
     useEffect(() => {
