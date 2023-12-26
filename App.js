@@ -15,7 +15,7 @@ import EditTodoScreen from './src/EditTodoScreen';
 import UserScreen from './src/UserScreen';
 import FavoritesScreen from './src/FavoritesScreen';
 import CartScreen from './src/CartScreen';
-import UploadImageScreen from './src/UploadImageScreenv';
+import UploadImageScreen from './src/UploadImageScreen';
 import UrunlerIstekListele from './src/UrunlerIstekListele';
 import UserUpdateScreen from './src/UserUpdateScreen ';
 
@@ -168,7 +168,8 @@ function App() {
           elevation: 25
         }
       }}     />
- <Stack.Screen name="UploadImageScreen" component={UploadImageScreen}  />
+ <Stack.Screen name="UploadImageScreen" component={UploadImageScreen} 
+  />
         <Stack.Screen name="UrunlerIstekListele" component={UrunlerIstekListele}    options={{
         headerTitle: () => <Header name="UrunlerIstekListele"/>,
         headerStyle: {
