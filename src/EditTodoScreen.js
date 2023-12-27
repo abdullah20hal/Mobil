@@ -1,26 +1,25 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Keyboard, ScrollView } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Keyboard, ScrollView, Image } from 'react-native';
 import { firebase } from '../config';
 
 const EditTodoScreen = ({ route, navigation }) => {
     const { item } = route.params;
     const [updatedHeading, setUpdatedHeading] = useState(item.heading);
     const [updatedImageUrl, setUpdatedImageUrl] = useState(item.imageUrl);
-    const [updatedPrice, setUpdatedPrice] = useState(item.price.toString()); // Tamsayıya dönüştürülmüş hali
+    const [updatedPrice, setUpdatedPrice] = useState(item.price.toString());
     const [updatedDescription, setUpdatedDescription] = useState(item.description);
 
     const todoRef = firebase.firestore().collection('todos');
 
     const updateTodo = () => {
-        // Tamsayıya dönüştürülmüş `updatedPrice` değerini bir kez daha tamsayıya dönüştürerek kullanabilirsiniz.
         const priceAsInt = parseInt(updatedPrice, 10);
 
         todoRef
             .doc(item.id)
             .update({
                 heading: updatedHeading,
-                imageUrl: updatedImageUrl,
-                price: priceAsInt, // Tamsayıya dönüştürülmüş değeri kullanın
+                imageUrl: updatedImageUrl, // Resim URL'sini güncellemek
+                price: priceAsInt,
                 description: updatedDescription,
             })
             .then(() => {
@@ -30,7 +29,8 @@ const EditTodoScreen = ({ route, navigation }) => {
             .catch((error) => {
                 alert(error);
             });
-            todoRef
+
+        todoRef
             .doc(item.id)
             .collection('notifications')
             .add({
@@ -57,7 +57,11 @@ const EditTodoScreen = ({ route, navigation }) => {
                 />
             </View>
             <View style={styles.inputContainer}>
-                <Text style={styles.label}>Image URL:</Text>
+                <Text style={styles.label}>Image:</Text>
+                <Image
+                    source={{ uri: updatedImageUrl }} // Resim URL'sini kullanarak resmi göster
+                    style={styles.image}
+                />
                 <TextInput
                     style={styles.input}
                     onChangeText={setUpdatedImageUrl}
@@ -72,7 +76,7 @@ const EditTodoScreen = ({ route, navigation }) => {
                     onChangeText={setUpdatedPrice}
                     value={updatedPrice}
                     placeholder="Price"
-                    keyboardType="numeric" // Klavyenin sayısal olmasını sağlar
+                    keyboardType="numeric"
                 />
             </View>
             <View style={styles.inputContainer}>
@@ -86,7 +90,7 @@ const EditTodoScreen = ({ route, navigation }) => {
                 />
             </View>
             <TouchableOpacity style={styles.button} onPress={updateTodo}>
-                <Text style={styles.buttonText}>Urun Guncelle</Text>
+                <Text style={styles.buttonText}>Ürün Güncelle</Text>
             </TouchableOpacity>
         </ScrollView>
     );
@@ -119,6 +123,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         fontSize: 16,
         textAlignVertical: 'top',
+    },
+    image: {
+        width: 100,
+        height: 100,
+        resizeMode: 'cover',
+        marginBottom: 10,
     },
     button: {
         height: 50,

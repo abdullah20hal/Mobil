@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, Pressable, FlatList } from 'react-native';
+import { StyleSheet, View, Text, Pressable, FlatList, Image } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { firebase } from '../config';
+
 const UrunlerIstekListele = () => {
     const [todos, setTodos] = useState([]);
     const todoRef = firebase.firestore().collection('todos');
@@ -19,7 +20,7 @@ const UrunlerIstekListele = () => {
                         todos.push({
                             id: doc.id,
                             heading,
-                            imageUrl, // Yeni eklenen özellikler
+                            imageUrl, 
                             price,
                             description,
                         });
@@ -51,9 +52,10 @@ const UrunlerIstekListele = () => {
                         <Text style={styles.itemHeading}>
                             {item.heading[0].toUpperCase() + item.heading.slice(1)}
                         </Text>
-                        <Text style={styles.itemDescription}>
-                            Image URL: {item.imageUrl}
-                        </Text>
+                        <Image
+                            source={{ uri: item.imageUrl }}
+                            style={styles.itemImage}
+                        />
                         <Text style={styles.itemDescription}>
                             Price: {item.price}
                         </Text>
@@ -92,17 +94,24 @@ const styles = StyleSheet.create({
     itemHeading: {
         fontWeight: 'bold',
         fontSize: 18,
-        marginBottom: 5, // Başlık ile diğer metinler arasında boşluk bırakır
+        marginBottom: 5,
+    },
+    itemImage: {
+        width: 200,
+        height: 200,
+        resizeMode: 'cover',
+        borderRadius: 10,
+        marginBottom: 5,
     },
     itemDescription: {
         fontSize: 14,
-        color: 'gray', // Metinleri gri renkte yapar
+        color: 'gray',
     },
     editButton: {
         backgroundColor: 'blue',
         padding: 10,
         borderRadius: 5,
-        marginRight: 10, // Düzenle düğmesi ile sil düğmesi arasında boşluk bırakır
+        marginRight: 10,
     },
     editButtonText: {
         color: 'white',
@@ -119,6 +128,4 @@ const styles = StyleSheet.create({
     },
 });
 
-
 export default UrunlerIstekListele;
-
