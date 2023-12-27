@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, FlatList, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, View, Text, FlatList, TouchableOpacity, Alert,Image } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { getAuth, signOut } from 'firebase/auth';
 
@@ -88,23 +88,44 @@ const Dashboard = ({ navigation, route }) => {
     }, [navigation]);
 
     // Ürünleri listeleyen bir bileşen oluştur
-    const renderProduct = ({ item }) => (
-        <View style={styles.productContainer}>
-            <Text style={styles.productName}>{item.heading}</Text>
-            <Text style={styles.productPrice}>Fiyat: {item.price}</Text>
-            <Text style={styles.productDescription}>{item.description}</Text>
-            <Text style={styles.productImageUrl}>Resim URL: {item.imageUrl}</Text>
+    const renderProduct = ({ item }) => {
+        // Ürün ID'sine göre resim seç
+        let imageSource;
+        switch (item.id) {
+            case 'product1':
+                imageSource = require('../assets/product1.jpg');
+                break;
+            case 'product2':
+                imageSource = require('../assets/product2.jpg');
+                break;
+            // Diğer durumlar için daha fazla case eklenebilir
+          //  default:
+              //  imageSource = require('../assets/default.jpg'); // varsayılan resim
+        }
 
-            <View style={styles.iconRow}>
-                <TouchableOpacity onPress={() => addToCart(item)} style={styles.iconButton}>
-                    <FontAwesome name="shopping-cart" size={24} color="black" />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => addToFavorites(item)} style={styles.iconButton}>
-                    <FontAwesome name="heart" size={24} color="red" />
-                </TouchableOpacity>
+        return (
+            <View style={styles.productContainer}>
+                <Text style={styles.productName}>{item.heading}</Text>
+                
+                <Image
+                    source={imageSource}
+                    style={styles.productImage}
+                />
+
+                <Text style={styles.productPrice}>Fiyat: {item.price}</Text>
+                <Text style={styles.productDescription}>{item.description}</Text>
+
+                <View style={styles.iconRow}>
+                    <TouchableOpacity onPress={() => addToCart(item)} style={styles.iconButton}>
+                        <FontAwesome name="shopping-cart" size={24} color="black" />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => addToFavorites(item)} style={styles.iconButton}>
+                        <FontAwesome name="heart" size={24} color="red" />
+                    </TouchableOpacity>
+                </View>
             </View>
-        </View>
-    );
+        );
+    };
 
     const addToCart = (item) => {
         const user = firebase.auth().currentUser; // Aktif kullanıcıyı al
@@ -171,6 +192,7 @@ const Dashboard = ({ navigation, route }) => {
 
         return () => clearTimeout(notificationTimer);
     }, []);
+    
 
     return (
         <View style={styles.container}>
@@ -210,6 +232,12 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 16,
         marginBottom: 5,
+    },
+    productImage: {
+        width: '100%', 
+        height: 200, 
+        resizeMode: 'cover',
+        borderRadius: 10,
     },
     productDescription: {
         color: '#757575', // Koyu gri tonu

@@ -1,101 +1,81 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Alert, Button, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Button, StyleSheet, Image, Alert, Platform } from 'react-native';
+import storage from '@react-native-firebase/storage';
 import * as ImagePicker from 'expo-image-picker';
-import * as FileSystem from 'expo-file-system';
-import firebase from '../config'; // Bu yolu projenizdeki Firebase konfigürasyonuna göre güncelleyin.
 
+const UploadImageScreen = () => {
+  const [imageUri, setImageUri] = useState(null);
 
-export const UploadImageScreen = (onImageUploaded ) => {
-  const [image, setImage] = useState(null);
-  const [uploading, setUploading] = useState(false);
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== 'web') {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+          alert('Üzgünüz, resimleri seçmek için izinlere ihtiyacımız var!');
+        }
+      }
+    })();
+  }, []);
 
-  const pickImage = async () => {
-    // Burada kullanıcının galeriye erişim izni olup olmadığını kontrol etmek gerekebilir.
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All, // Tüm medya tiplerini kabul eder.
-      allowsEditing: true, // Kullanıcıların görüntüyü düzenlemesine izin verir.
-      aspect: [4, 3], // Düzenleme arayüzünün yönünü belirler.
-      quality: 1, // Görüntü kalitesini maksimum yapar.
+  const selectImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
     });
 
     if (!result.canceled) {
-      setImage(result.uri);
-      console.log(result.uri);
+      // Seçilen resmin URI'sini al ve state'i güncelle
+      const selectedAsset = result.assets[0];
+      setImageUri(selectedAsset.uri);
     }
   };
 
-  const uploadMedia = async () => {
-    setUploading(true);
-    try {
-      const uri = await FileSystem.getInfoAsync(image);
-      const blob = await new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.onload = () => {
-          resolve(xhr.response);
-        };
-        xhr.onerror = (e) => {
-          reject(new TypeError('Network request failed'));
-        };
-        xhr.responseType = 'blob';
-        xhr.open('GET', uri, true);
-        xhr.send(null);
-      });
+  const uploadImage = async () => {
+    if (!imageUri) {
+      Alert.alert('Lütfen önce bir resim seçin');
+      return;
+    }
 
-      const filename = image.substring(image.lastIndexOf('/') + 1);
-      const ref = firebase.storage().ref().child(filename);
-      await ref.put(blob);
-      setUploading(false);
-      Alert.alert('Photo Uploaded!!!');
-      setImage(null);
+    const fileName = imageUri.substring(imageUri.lastIndexOf('/') + 1);
+    const storageRef = storage().ref(`images/${fileName}`);
+
+    try {
+      // Firebase Storage'a yükleme yapılıyor
+      await storageRef.putFile(imageUri);
+      Alert.alert('Resim başarıyla yüklendi!');
     } catch (error) {
-      console.error(error);
-      setUploading(false);
+      console.log('Resim yükleme hatası:', error);
+      Alert.alert('Resim yüklenirken bir hata oluştu');
     }
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <TouchableOpacity style={styles.selectButton} onPress={pickImage}>
-        <Text style={styles.buttonText}>Pick an Image</Text>
-      </TouchableOpacity>
-      {image && (
-        <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
-      )}
-      {image && (
-        <TouchableOpacity style={styles.uploadButton} onPress={uploadMedia}>
-          <Text style={styles.buttonText}>Upload Image</Text>
-        </TouchableOpacity>
-      )}
-      <View>
-      <Button title="Ürün Görseli Seç" onPress={pickImage} />
-      {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-      {image && <Button title="Upload Image" onPress={uploadMedia} />}
+    <View style={styles.container}>
+      <Text style={styles.title}>Resim Yükleme Ekranı</Text>
+      <Button title="Resim Seç" onPress={selectImage} />
+      {imageUri && <Image source={{ uri: imageUri }} style={styles.previewImage} />}
+      <Button title="Resmi Yükle" onPress={uploadImage} />
     </View>
-
-    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
   },
-  selectButton: {
-    backgroundColor: 'blue',
-    padding: 10,
-    borderRadius: 5,
-  },
-  uploadButton: {
-    backgroundColor: 'green',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 10,
-  },
-  buttonText: {
-    color: 'white',
+  title: {
     fontSize: 20,
+    marginBottom: 20,
+  },
+  previewImage: {
+    width: 300,
+    height: 300,
+    resizeMode: 'contain',
+    marginVertical: 20,
   },
 });
 
