@@ -29,6 +29,9 @@ const Admin = ({ route }) => {
             setProductPrice(''); // Geçersiz girdi durumunda sıfırla
         }
     };
+    const handleOrdersButtonPress = () => {
+        navigation.navigate('Siparişler'); // "Siparisler" sayfasına yönlendirme
+    };
 
     useEffect(() => {
         todoRef
@@ -163,6 +166,9 @@ const Admin = ({ route }) => {
             <TouchableOpacity style={styles.button} onPress={addTodo}>
                 <Text style={styles.buttonText}>Ürün Ekle</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.ordersButton} onPress={handleOrdersButtonPress}>
+                <Text style={styles.buttonText}>Siparişler Listesi</Text>
+            </TouchableOpacity>
         </ScrollView>
     );
 };
@@ -202,6 +208,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         fontSize: 16,
         textAlignVertical: 'top',
+    },
+    ordersButton: {
+        height: 50,
+        backgroundColor: '#34A853', // Yeşil renk
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 8,
+        marginTop: 10, // Üstteki butondan boşluk
     },
     button: {
         height: 50,
