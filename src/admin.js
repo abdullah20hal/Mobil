@@ -30,7 +30,7 @@ const Admin = ({ route }) => {
         }
     };
     const handleOrdersButtonPress = () => {
-        navigation.navigate('Siparişler'); // "Siparisler" sayfasına yönlendirme
+        navigation.navigate('Siparisler'); // "Siparisler" sayfasına yönlendirme
     };
 
     useEffect(() => {

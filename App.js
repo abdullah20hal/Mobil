@@ -18,7 +18,7 @@ import CartScreen from './src/CartScreen';
 import UploadImageScreen from './src/UploadImageScreen';
 import UrunlerIstekListele from './src/UrunlerIstekListele';
 import UserUpdateScreen from './src/UserUpdateScreen ';
-import Siparişler from './src/Siparişler';
+import Siparisler from './src/Siparisler';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -159,9 +159,9 @@ function App() {
       }} 
       
       />
-            <Stack.Screen name="Siparişler" component={Siparişler} 
+            <Stack.Screen name="Siparisler" component={Siparisler} 
        options={{
-        headerTitle: () => <Header name="Siparişler"/>,
+        headerTitle: () => <Header name="Siparisler"/>,
         headerStyle: {
           height: 100,
           borderBottomLeftRadius: 25,
