@@ -167,7 +167,7 @@ const Admin = ({ route }) => {
                 <Text style={styles.buttonText}>Ürün Ekle</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.ordersButton} onPress={handleOrdersButtonPress}>
-                <Text style={styles.buttonText}>Siparişler Listesi</Text>
+                <Text style={styles.buttonText}>Siparisler Listesi</Text>
             </TouchableOpacity>
         </ScrollView>
     );
